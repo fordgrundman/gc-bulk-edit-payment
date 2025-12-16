@@ -18,8 +18,8 @@ app.post("/create-checkout", async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: "price_1Sf6FOJguShk9RUdUS5e2XyS", quantity: 1 }],
-      success_url: "https://www.gcbulkedit.dev",
-      cancel_url: "https://www.gcbulkedit.dev",
+      success_url: "https://www.gcbulkedit.dev/payment-success",
+      cancel_url: "https://www.gcbulkedit.dev/payment-cancel",
     });
     res.json({ url: session.url });
   } catch (error) {
