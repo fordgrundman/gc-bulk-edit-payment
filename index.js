@@ -4,6 +4,11 @@ import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import bodyParser from "body-parser";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -21,6 +26,9 @@ const FREE_ACTIONS_LIMIT = 100;
 
 const app = express();
 app.use(cors());
+
+// Serve static files (icons, images)
+app.use(express.static(path.join(__dirname, "public")));
 
 // ---------------- STRIPE WEBHOOK -----------------
 app.post(
@@ -478,10 +486,23 @@ app.get("/payment-success", (req, res) => {
       font-size: 13px;
       color: #888;
     }
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="logo">
+      <img src="/icon128.png" alt="GC Bulk Edit Logo">
+    </div>
     <div class="icon">
       <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
     </div>
@@ -572,10 +593,23 @@ app.get("/payment-cancel", (req, res) => {
       font-size: 13px;
       color: #888;
     }
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="logo">
+      <img src="/icon128.png" alt="GC Bulk Edit Logo">
+    </div>
     <div class="icon">
       <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
     </div>
@@ -626,17 +660,13 @@ app.get("/privacy", (req, res) => {
     .logo {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin: 0 auto 20px;
     }
-    .logo svg {
-      width: 50px;
-      height: 50px;
-      fill: white;
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
     }
     h1 {
       color: #1a1a1a;
@@ -754,7 +784,7 @@ app.get("/privacy", (req, res) => {
   <div class="container">
     <div class="header">
       <div class="logo">
-        <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+        <img src="/icon128.png" alt="GC Bulk Edit Logo">
       </div>
       <h1>GC Bulk Edit</h1>
       <p class="subtitle">Privacy Policy - Last Updated: 12/9/2025</p>
@@ -762,6 +792,10 @@ app.get("/privacy", (req, res) => {
         <a href="https://forms.gle/2ChNW343VCfkC9Ho7" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
           Feedback Form
+        </a>
+        <a href="https://forms.gle/u6zVcJoor7i5Q1Gd9" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+          Support
         </a>
         <a href="https://chromewebstore.google.com/detail/fgcgmhgddehkjfjmnjhhnapfocanccph?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
@@ -863,6 +897,175 @@ app.get("/privacy", (req, res) => {
       <p>If you have questions about this Privacy Policy or the Extension, you can contact us at:</p>
       <p><strong>Email:</strong> <a href="mailto:codingasford@gmail.com">codingasford@gmail.com</a></p>
     </div>
+  </div>
+</body>
+</html>
+  `;
+  res.send(html);
+});
+
+// ---------------- HOME PAGE -----------------
+app.get("/", (req, res) => {
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GC Bulk Edit - Google Calendar Bulk Editing Extension</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 48px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 24px;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    h1 {
+      color: #333;
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+    .tagline {
+      color: #666;
+      font-size: 18px;
+      margin-bottom: 32px;
+    }
+    .features {
+      text-align: left;
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .features h3 {
+      color: #333;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    .features ul {
+      list-style: none;
+    }
+    .features li {
+      color: #555;
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+    }
+    .features li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 24px;
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .links a {
+      color: #667eea;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .links a:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+    .footer {
+      margin-top: 40px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+    }
+    .footer a {
+      color: white;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="/icon128.png" alt="GC Bulk Edit Logo">
+    </div>
+    <h1>GC Bulk Edit</h1>
+    <p class="tagline">Bulk edit, delete, and manage your Google Calendar events with ease</p>
+    
+    <div class="features">
+      <h3>Features</h3>
+      <ul>
+        <li>Select multiple events at once with Ctrl+Click</li>
+        <li>Bulk delete events with a single keystroke</li>
+        <li>Move events to different calendars</li>
+        <li>Duplicate events quickly</li>
+        <li>Customizable keyboard shortcuts</li>
+        <li>Works seamlessly with Google Calendar</li>
+      </ul>
+    </div>
+    
+    <a href="https://chromewebstore.google.com/detail/fgcgmhgddehkjfjmnjhhnapfocanccph" class="cta-button" target="_blank" rel="noopener noreferrer">
+      Get the Extension
+    </a>
+    
+    <div class="links">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe17nZWRz1lQy7E7i-ZP4OC6A_9AjmBbZnAP17KPQhPr5_D3Q/viewform" target="_blank" rel="noopener noreferrer">Feedback</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe10ZW6zc5XtI1kMH_-cQP_mJKrQK8L7zHvD9BFKwxV4pE3dg/viewform" target="_blank" rel="noopener noreferrer">Support</a>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>&copy; 2025 GC Bulk Edit. <a href="mailto:codingasford@gmail.com">Contact Us</a></p>
   </div>
 </body>
 </html>
