@@ -19,7 +19,6 @@ const customersCollection = db.collection("customers");
 
 const app = express();
 app.use(cors());
-app.use(express.json());
 
 // ---------------- CREATE CHECKOUT ----------------
 app.post("/create-checkout", async (req, res) => {
@@ -192,5 +191,8 @@ app.post(
     res.status(200).json({ received: true });
   }
 );
+
+// Now you can safely parse JSON for all other routes
+app.use(express.json());
 
 app.listen(3000, () => console.log("Server running on port 3000"));
