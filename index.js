@@ -337,6 +337,49 @@ app.get("/action-status", async (req, res) => {
   }
 });
 
+// ---------------- UNSUBSCRIBE ----------------
+app.post("/unsubscribe", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email required" });
+
+    const normalizedEmail = email.toLowerCase();
+    const customer = await customersCollection.findOne({
+      emails: { $in: [normalizedEmail] },
+    });
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    if (!customer.subscription_status) {
+      return res.json({ success: true, message: "No active subscription" });
+    }
+
+    // Get the Stripe subscription and cancel it
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.customer_id,
+      status: "active",
+    });
+
+    for (const subscription of subscriptions.data) {
+      await stripe.subscriptions.cancel(subscription.id);
+    }
+
+    // Update database - set subscription_status to false but keep free_actions_remaining
+    await customersCollection.updateOne(
+      { customer_id: customer.customer_id },
+      { $set: { subscription_status: false } }
+    );
+
+    console.log(`Unsubscribed customer: ${customer.customer_id}`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Unsubscribe failed:", err);
+    res.status(500).json({ error: "Failed to unsubscribe" });
+  }
+});
+
 // ---------------- LINK EMAIL ----------------
 app.post("/link-email", async (req, res) => {
   try {
