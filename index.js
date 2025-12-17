@@ -14,7 +14,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 const client = new MongoClient(process.env.MONGO_URI);
 await client.connect();
 
-const db = client.db();
+const db = client.db("gc-bulk-edit-db");
 const customersCollection = db.collection("customers");
 
 const app = express();
