@@ -6,6 +6,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +26,41 @@ const customersCollection = db.collection("customers");
 
 const FREE_ACTIONS_LIMIT = 100;
 
+// Email validation helper
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 const app = express();
-app.use(cors());
+
+// Security middleware
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Disable for inline HTML pages
+  })
+);
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: { error: "Too many requests, please try again later" },
+});
+app.use(limiter);
+
+// CORS - restrict to specific origins
+app.use(
+  cors({
+    origin: [
+      "https://calendar.google.com",
+      "https://www.google.com",
+      "https://gcbulkedit.dev",
+      "https://www.gcbulkedit.dev",
+      /^chrome-extension:\/\//, // Allow all Chrome extensions (your extension ID may change)
+    ],
+    credentials: true,
+  })
+);
 
 // Serve static files (icons, images)
 app.use(express.static(path.join(__dirname, "public")));
@@ -86,6 +121,8 @@ app.post("/create-checkout", async (req, res) => {
   try {
     let { email } = req.body;
     if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
 
     const normalizedEmail = email.toLowerCase();
     console.log("Create checkout request:", normalizedEmail);
@@ -98,7 +135,37 @@ app.post("/create-checkout", async (req, res) => {
 
     if (customer) {
       stripeCustomerId = customer.customer_id;
-      console.log("Found existing customer:", stripeCustomerId);
+      console.log("Found existing customer in DB:", stripeCustomerId);
+
+      // Verify the customer exists in Stripe (might be from test mode)
+      try {
+        await stripe.customers.retrieve(stripeCustomerId);
+        console.log("Customer verified in Stripe:", stripeCustomerId);
+      } catch (stripeErr) {
+        if (stripeErr.code === "resource_missing") {
+          // Customer doesn't exist in Stripe (probably from test mode)
+          // Create a new Stripe customer and update DB
+          console.log("Customer not found in Stripe, creating new one...");
+          const newStripeCustomer = await stripe.customers.create({
+            email: normalizedEmail,
+          });
+          stripeCustomerId = newStripeCustomer.id;
+
+          // Update the DB with the new Stripe customer ID
+          await customersCollection.updateOne(
+            { _id: customer._id },
+            {
+              $set: {
+                customer_id: stripeCustomerId,
+                subscription_status: false, // Reset since old subscription was in test mode
+              },
+            }
+          );
+          console.log("Updated customer with new Stripe ID:", stripeCustomerId);
+        } else {
+          throw stripeErr;
+        }
+      }
     } else {
       // Create Stripe customer
       const stripeCustomer = await stripe.customers.create({
@@ -149,6 +216,8 @@ app.post("/resolve-customer", async (req, res) => {
   try {
     let { email } = req.body;
     if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
 
     const normalizedEmail = email.toLowerCase();
     const customer = await customersCollection.findOne({
@@ -200,6 +269,8 @@ app.post("/check-action", async (req, res) => {
   try {
     const { email, action_count = 1 } = req.body;
     if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
 
     const normalizedEmail = email.toLowerCase();
     let customer = await customersCollection.findOne({
@@ -270,6 +341,8 @@ app.post("/consume-actions", async (req, res) => {
   try {
     const { email, action_count = 1 } = req.body;
     if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
 
     const normalizedEmail = email.toLowerCase();
     const customer = await customersCollection.findOne({
@@ -316,6 +389,8 @@ app.get("/action-status", async (req, res) => {
   try {
     const { email } = req.query;
     if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
 
     const normalizedEmail = email.toLowerCase();
     const customer = await customersCollection.findOne({
@@ -350,31 +425,82 @@ app.post("/unsubscribe", async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
 
     const normalizedEmail = email.toLowerCase();
+    console.log("Unsubscribe request for:", normalizedEmail);
+
     const customer = await customersCollection.findOne({
       emails: { $in: [normalizedEmail] },
     });
 
     if (!customer) {
+      console.log("Customer not found in DB:", normalizedEmail);
       return res.status(404).json({ error: "Customer not found" });
     }
+
+    console.log(
+      "Found customer:",
+      customer.customer_id,
+      "subscription_status:",
+      customer.subscription_status
+    );
 
     if (!customer.subscription_status) {
       return res.json({ success: true, message: "No active subscription" });
     }
 
-    // Get the Stripe subscription and cancel it
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customer.customer_id,
-      status: "active",
-    });
-
-    for (const subscription of subscriptions.data) {
-      await stripe.subscriptions.cancel(subscription.id);
+    // Try to get subscriptions from Stripe, but handle missing customer
+    let subscriptions;
+    try {
+      subscriptions = await stripe.subscriptions.list({
+        customer: customer.customer_id,
+      });
+      console.log(
+        "Found",
+        subscriptions.data.length,
+        "subscriptions in Stripe"
+      );
+    } catch (stripeErr) {
+      if (stripeErr.code === "resource_missing") {
+        // Customer doesn't exist in Stripe (probably from test mode)
+        console.log("Customer not found in Stripe, just updating DB...");
+        await customersCollection.updateOne(
+          { customer_id: customer.customer_id },
+          { $set: { subscription_status: false } }
+        );
+        return res.json({
+          success: true,
+          message: "Subscription status reset",
+        });
+      }
+      throw stripeErr;
     }
 
-    // Update database - set subscription_status to false but keep free_actions_remaining
+    // Filter to only active/past_due/trialing subscriptions that can be canceled
+    const cancelableStatuses = ["active", "past_due", "trialing", "unpaid"];
+    const subscriptionsToCancel = subscriptions.data.filter((sub) =>
+      cancelableStatuses.includes(sub.status)
+    );
+
+    console.log("Subscriptions to cancel:", subscriptionsToCancel.length);
+
+    for (const subscription of subscriptionsToCancel) {
+      try {
+        await stripe.subscriptions.cancel(subscription.id);
+        console.log("Canceled subscription:", subscription.id);
+      } catch (cancelErr) {
+        console.error(
+          "Failed to cancel subscription",
+          subscription.id,
+          ":",
+          cancelErr.message
+        );
+      }
+    }
+
+    // Update database - set subscription_status to false regardless of Stripe result
     await customersCollection.updateOne(
       { customer_id: customer.customer_id },
       { $set: { subscription_status: false } }
