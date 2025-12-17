@@ -1057,8 +1057,8 @@ app.get("/", (req, res) => {
     </a>
     
     <div class="links">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe17nZWRz1lQy7E7i-ZP4OC6A_9AjmBbZnAP17KPQhPr5_D3Q/viewform" target="_blank" rel="noopener noreferrer">Feedback</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe10ZW6zc5XtI1kMH_-cQP_mJKrQK8L7zHvD9BFKwxV4pE3dg/viewform" target="_blank" rel="noopener noreferrer">Support</a>
+      <a href="https://forms.gle/2ChNW343VCfkC9Ho7" target="_blank" rel="noopener noreferrer">Feedback</a>
+      <a href="https://forms.gle/u6zVcJoor7i5Q1Gd9" target="_blank" rel="noopener noreferrer">Support</a>
       <a href="/privacy">Privacy Policy</a>
     </div>
   </div>
