@@ -20,6 +20,57 @@ const customersCollection = db.collection("customers");
 const app = express();
 app.use(cors());
 
+// ---------------- STRIPE WEBHOOK ----------------
+app.post(
+  "/webhook",
+  // Use raw body for signature verification
+  bodyParser.raw({ type: "application/json" }),
+  async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    let event;
+
+    try {
+      // Construct the Stripe event from raw body
+      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle checkout.session.completed event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      const customer_id = session.customer;
+
+      try {
+        // Update MongoDB subscription status to true
+        const result = await customersCollection.updateOne(
+          { customer_id },
+          { $set: { subscription_status: true } }
+        );
+
+        if (result.matchedCount === 0) {
+          console.warn(`Webhook: Customer not found in DB: ${customer_id}`);
+        } else {
+          console.log(
+            `Webhook: Customer ${customer_id} subscription marked active`
+          );
+        }
+      } catch (err) {
+        console.error("Webhook: Failed to update subscription in DB:", err);
+      }
+    }
+
+    // Return a 200 response to acknowledge receipt
+    res.status(200).json({ received: true });
+  }
+);
+
+// Now you can safely parse JSON for all other routes
+app.use(express.json());
+
 // ---------------- CREATE CHECKOUT ----------------
 app.post("/create-checkout", async (req, res) => {
   try {
@@ -143,56 +194,5 @@ app.post("/link-email", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
-
-// ---------------- STRIPE WEBHOOK ----------------
-app.post(
-  "/webhook",
-  // Use raw body for signature verification
-  bodyParser.raw({ type: "application/json" }),
-  async (req, res) => {
-    const sig = req.headers["stripe-signature"];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-    let event;
-
-    try {
-      // Construct the Stripe event from raw body
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-    } catch (err) {
-      console.error("Webhook signature verification failed:", err.message);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
-    // Handle checkout.session.completed event
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      const customer_id = session.customer;
-
-      try {
-        // Update MongoDB subscription status to true
-        const result = await customersCollection.updateOne(
-          { customer_id },
-          { $set: { subscription_status: true } }
-        );
-
-        if (result.matchedCount === 0) {
-          console.warn(`Webhook: Customer not found in DB: ${customer_id}`);
-        } else {
-          console.log(
-            `Webhook: Customer ${customer_id} subscription marked active`
-          );
-        }
-      } catch (err) {
-        console.error("Webhook: Failed to update subscription in DB:", err);
-      }
-    }
-
-    // Return a 200 response to acknowledge receipt
-    res.status(200).json({ received: true });
-  }
-);
-
-// Now you can safely parse JSON for all other routes
-app.use(express.json());
 
 app.listen(3000, () => console.log("Server running on port 3000"));
