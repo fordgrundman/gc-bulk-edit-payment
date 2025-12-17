@@ -20,7 +20,7 @@ const customersCollection = db.collection("customers");
 const app = express();
 app.use(cors());
 
-// ---------------- STRIPE WEBHOOK ----------------
+// ---------------- STRIPE WEBHOOK -----------------
 app.post(
   "/webhook",
   // Use raw body for signature verification
