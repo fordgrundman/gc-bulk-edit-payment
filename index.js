@@ -17,6 +17,8 @@ await client.connect();
 const db = client.db("gc-bulk-edit-db");
 const customersCollection = db.collection("customers");
 
+const FREE_ACTIONS_LIMIT = 100;
+
 const app = express();
 app.use(cors());
 
@@ -151,6 +153,8 @@ app.post("/resolve-customer", async (req, res) => {
       found: true,
       customer_id: customer.customer_id,
       subscribed: customer.subscription_status,
+      free_actions_remaining:
+        customer.free_actions_remaining ?? FREE_ACTIONS_LIMIT,
     });
   } catch (err) {
     console.error("Resolve customer failed:", err);
@@ -166,12 +170,170 @@ app.get("/check-subscription", async (req, res) => {
       return res.status(400).json({ error: "Customer ID required" });
 
     const customer = await customersCollection.findOne({ customer_id });
-    if (!customer) return res.json({ subscribed: false });
+    if (!customer)
+      return res.json({
+        subscribed: false,
+        free_actions_remaining: FREE_ACTIONS_LIMIT,
+      });
 
-    res.json({ subscribed: customer.subscription_status });
+    res.json({
+      subscribed: customer.subscription_status,
+      free_actions_remaining:
+        customer.free_actions_remaining ?? FREE_ACTIONS_LIMIT,
+    });
   } catch (err) {
     console.error("Check subscription failed:", err);
     res.status(500).json({ subscribed: false });
+  }
+});
+
+// ------------------------ CHECK CAN PERFORM ACTION --------------------------------------
+app.post("/check-action", async (req, res) => {
+  try {
+    const { email, action_count = 1 } = req.body;
+    if (!email) return res.status(400).json({ error: "Email required" });
+
+    const normalizedEmail = email.toLowerCase();
+    let customer = await customersCollection.findOne({
+      emails: { $in: [normalizedEmail] },
+    });
+
+    // If customer doesn't exist, create them with free actions
+    if (!customer) {
+      const stripeCustomer = await stripe.customers.create({
+        email: normalizedEmail,
+      });
+
+      await customersCollection.insertOne({
+        customer_id: stripeCustomer.id,
+        subscription_status: false,
+        plan: "price_1Sf6FOJguShk9RUdUS5e2XyS",
+        emails: [normalizedEmail],
+        free_actions_remaining: FREE_ACTIONS_LIMIT,
+      });
+
+      customer = await customersCollection.findOne({
+        emails: { $in: [normalizedEmail] },
+      });
+    }
+
+    // Initialize free_actions_remaining if not set
+    if (customer.free_actions_remaining === undefined) {
+      await customersCollection.updateOne(
+        { customer_id: customer.customer_id },
+        { $set: { free_actions_remaining: FREE_ACTIONS_LIMIT } }
+      );
+      customer.free_actions_remaining = FREE_ACTIONS_LIMIT;
+    }
+
+    // If subscribed, always allow
+    if (customer.subscription_status) {
+      return res.json({
+        allowed: true,
+        subscribed: true,
+        free_actions_remaining: customer.free_actions_remaining,
+      });
+    }
+
+    // Check if enough free actions
+    if (customer.free_actions_remaining >= action_count) {
+      return res.json({
+        allowed: true,
+        subscribed: false,
+        free_actions_remaining: customer.free_actions_remaining,
+      });
+    }
+
+    // Not enough actions
+    return res.json({
+      allowed: false,
+      subscribed: false,
+      free_actions_remaining: customer.free_actions_remaining,
+      message: "No free actions remaining. Please subscribe to continue.",
+    });
+  } catch (err) {
+    console.error("Check action failed:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ------------------------ CONSUME ACTIONS --------------------------------------
+app.post("/consume-actions", async (req, res) => {
+  try {
+    const { email, action_count = 1 } = req.body;
+    if (!email) return res.status(400).json({ error: "Email required" });
+
+    const normalizedEmail = email.toLowerCase();
+    const customer = await customersCollection.findOne({
+      emails: { $in: [normalizedEmail] },
+    });
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    // If subscribed, don't consume free actions
+    if (customer.subscription_status) {
+      return res.json({
+        success: true,
+        subscribed: true,
+        free_actions_remaining:
+          customer.free_actions_remaining ?? FREE_ACTIONS_LIMIT,
+      });
+    }
+
+    // Consume free actions
+    const currentActions =
+      customer.free_actions_remaining ?? FREE_ACTIONS_LIMIT;
+    const newActionsRemaining = Math.max(0, currentActions - action_count);
+
+    await customersCollection.updateOne(
+      { customer_id: customer.customer_id },
+      { $set: { free_actions_remaining: newActionsRemaining } }
+    );
+
+    return res.json({
+      success: true,
+      subscribed: false,
+      free_actions_remaining: newActionsRemaining,
+    });
+  } catch (err) {
+    console.error("Consume actions failed:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ------------------------ GET ACTION STATUS --------------------------------------
+app.get("/action-status", async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ error: "Email required" });
+
+    const normalizedEmail = email.toLowerCase();
+    const customer = await customersCollection.findOne({
+      emails: { $in: [normalizedEmail] },
+    });
+
+    if (!customer) {
+      // New user - they get free actions
+      return res.json({
+        subscribed: false,
+        free_actions_remaining: FREE_ACTIONS_LIMIT,
+        can_perform_action: true,
+      });
+    }
+
+    const freeActions = customer.free_actions_remaining ?? FREE_ACTIONS_LIMIT;
+    const canPerform = customer.subscription_status || freeActions > 0;
+
+    return res.json({
+      subscribed: customer.subscription_status,
+      free_actions_remaining: freeActions,
+      can_perform_action: canPerform,
+    });
+  } catch (err) {
+    console.error("Get action status failed:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
