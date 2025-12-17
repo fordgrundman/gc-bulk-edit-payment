@@ -125,8 +125,8 @@ app.post("/create-checkout", async (req, res) => {
         },
       ],
       customer: stripeCustomerId,
-      success_url: `${process.env.FRONTEND_URL}/payment-success?customer_id=${stripeCustomerId}`,
-      cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
+      success_url: `https://api-gc-bulk-edit-payment.onrender.com/payment-success?customer_id=${stripeCustomerId}`,
+      cancel_url: `https://api-gc-bulk-edit-payment.onrender.com/payment-cancel`,
     });
 
     res.json({ url: session.url });
@@ -398,6 +398,198 @@ app.post("/link-email", async (req, res) => {
     console.error("Link email failed:", err);
     res.status(500).json({ success: false });
   }
+});
+
+// ---------------- PAYMENT SUCCESS PAGE ----------------
+app.get("/payment-success", (req, res) => {
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - GC Bulk Edit</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .icon svg {
+      width: 40px;
+      height: 40px;
+      fill: white;
+    }
+    h1 {
+      color: #1a1a1a;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .steps {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+    .steps h3 {
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .steps ol {
+      color: #555;
+      font-size: 14px;
+      padding-left: 20px;
+    }
+    .steps li {
+      margin-bottom: 8px;
+    }
+    .note {
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+    <h1>Payment Successful!</h1>
+    <p>Thank you for subscribing to GC Bulk Edit. Your subscription is now active.</p>
+    <div class="steps">
+      <h3>Next steps:</h3>
+      <ol>
+        <li>Close this tab</li>
+        <li>Open your Google Calendar</li>
+        <li>Click the GC Bulk Edit extension icon</li>
+        <li>Your subscription status should show as Active</li>
+      </ol>
+    </div>
+    <p class="note">If your status doesn't update, try signing out and back in.</p>
+  </div>
+</body>
+</html>
+  `;
+  res.send(html);
+});
+
+// ---------------- PAYMENT CANCEL PAGE ----------------
+app.get("/payment-cancel", (req, res) => {
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Canceled - GC Bulk Edit</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: #ff9800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .icon svg {
+      width: 40px;
+      height: 40px;
+      fill: white;
+    }
+    h1 {
+      color: #1a1a1a;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .info {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .info p {
+      margin: 0;
+      font-size: 14px;
+    }
+    .note {
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </div>
+    <h1>Payment Canceled</h1>
+    <p>No worries! Your payment was not processed and you haven't been charged.</p>
+    <div class="info">
+      <p>You can still use your remaining free actions. When you're ready to subscribe, click the Subscribe button in the extension.</p>
+    </div>
+    <p class="note">You can close this tab and return to Google Calendar.</p>
+  </div>
+</body>
+</html>
+  `;
+  res.send(html);
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));
