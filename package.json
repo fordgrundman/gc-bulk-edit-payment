@@ -2,13 +2,15 @@
   "name": "gc-bulk-edit-payment",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
-    "type": "moduile",
+    "type": "git",
     "url": "git+https://github.com/fordgrundman/gc-bulk-edit-payment.git"
   },
   "keywords": [],
