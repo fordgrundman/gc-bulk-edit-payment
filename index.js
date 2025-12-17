@@ -24,7 +24,7 @@ await client.connect();
 const db = client.db("gc-bulk-edit-db");
 const customersCollection = db.collection("customers");
 
-const FREE_ACTIONS_LIMIT = 100;
+const FREE_ACTIONS_LIMIT = 50;
 
 // Email validation helper
 function isValidEmail(email) {
