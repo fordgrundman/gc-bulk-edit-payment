@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_PROD, {
   apiVersion: "2025-11-17.clover",
 });
 
@@ -37,7 +37,7 @@ app.post(
   bodyParser.raw({ type: "application/json" }),
   async (req, res) => {
     const sig = req.headers["stripe-signature"];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_PROD;
 
     let event;
 
@@ -111,7 +111,7 @@ app.post("/create-checkout", async (req, res) => {
         await customersCollection.insertOne({
           customer_id: stripeCustomerId,
           subscription_status: false,
-          plan: "price_1Sf6FOJguShk9RUdUS5e2XyS",
+          plan: process.env.STRIPE_PRICE_ID_PROD,
           emails: [normalizedEmail],
         });
         console.log("Inserted new customer:", stripeCustomerId);
@@ -128,7 +128,7 @@ app.post("/create-checkout", async (req, res) => {
       mode: "subscription",
       line_items: [
         {
-          price: "price_1Sf6FOJguShk9RUdUS5e2XyS",
+          price: process.env.STRIPE_PRICE_ID_PROD,
           quantity: 1,
         },
       ],
@@ -215,7 +215,7 @@ app.post("/check-action", async (req, res) => {
       await customersCollection.insertOne({
         customer_id: stripeCustomer.id,
         subscription_status: false,
-        plan: "price_1Sf6FOJguShk9RUdUS5e2XyS",
+        plan: process.env.STRIPE_PRICE_ID_PROD,
         emails: [normalizedEmail],
         free_actions_remaining: FREE_ACTIONS_LIMIT,
       });
