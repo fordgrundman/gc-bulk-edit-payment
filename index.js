@@ -51,7 +51,8 @@ app.post("/create-checkout", async (req, res) => {
         await customersCollection.insertOne({
           customer_id: stripeCustomerId,
           subscription_status: false,
-          plan: process.env.DEFAULT_PRICE_ID,
+          plan:
+            process.env.DEFAULT_PRICE_ID || "price_1Sf6FOJguShk9RUdUS5e2XyS",
           emails: [normalizedEmail],
         });
         console.log("Inserted new customer:", stripeCustomerId);
@@ -68,7 +69,8 @@ app.post("/create-checkout", async (req, res) => {
       mode: "subscription",
       line_items: [
         {
-          price: process.env.DEFAULT_PRICE_ID,
+          price:
+            process.env.DEFAULT_PRICE_ID || "price_1Sf6FOJguShk9RUdUS5e2XyS",
           quantity: 1,
         },
       ],
