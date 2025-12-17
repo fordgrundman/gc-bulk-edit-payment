@@ -146,14 +146,6 @@ app.post("/link-email", async (req, res) => {
 });
 
 // ---------------- STRIPE WEBHOOK ----------------
-import bodyParser from "body-parser";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-11-17.clover",
-});
-
-// ---------------- STRIPE WEBHOOK ----------------
 app.post(
   "/webhook",
   // Use raw body for signature verification
