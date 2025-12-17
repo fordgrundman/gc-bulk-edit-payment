@@ -1044,10 +1044,9 @@ app.get("/", (req, res) => {
     <div class="features">
       <h3>Features</h3>
       <ul>
-        <li>Select multiple events at once with Ctrl+Click</li>
+        <li>Select multiple events at once using a selection box</li>
         <li>Bulk delete events with a single keystroke</li>
-        <li>Move events to different calendars</li>
-        <li>Duplicate events quickly</li>
+        <li>Move many events at once</li>
         <li>Customizable keyboard shortcuts</li>
         <li>Works seamlessly with Google Calendar</li>
       </ul>
