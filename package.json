@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/fordgrundman/gc-bulk-edit-payment#readme",
   "dependencies": {
+    "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "mongodb": "^7.0.0",
     "stripe": "^20.1.0"
   }
 }
