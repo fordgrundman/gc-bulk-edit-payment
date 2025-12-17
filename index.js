@@ -51,8 +51,7 @@ app.post("/create-checkout", async (req, res) => {
         await customersCollection.insertOne({
           customer_id: stripeCustomerId,
           subscription_status: false,
-          plan:
-            process.env.DEFAULT_PRICE_ID || "price_1Sf6FOJguShk9RUdUS5e2XyS",
+          plan: "price_1Sf6FOJguShk9RUdUS5e2XyS",
           emails: [normalizedEmail],
         });
         console.log("Inserted new customer:", stripeCustomerId);
@@ -69,8 +68,7 @@ app.post("/create-checkout", async (req, res) => {
       mode: "subscription",
       line_items: [
         {
-          price:
-            process.env.DEFAULT_PRICE_ID || "price_1Sf6FOJguShk9RUdUS5e2XyS",
+          price: "price_1Sf6FOJguShk9RUdUS5e2XyS",
           quantity: 1,
         },
       ],
@@ -148,37 +146,58 @@ app.post("/link-email", async (req, res) => {
 });
 
 // ---------------- STRIPE WEBHOOK ----------------
+import bodyParser from "body-parser";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-11-17.clover",
+});
+
+// ---------------- STRIPE WEBHOOK ----------------
 app.post(
   "/webhook",
+  // Use raw body for signature verification
   bodyParser.raw({ type: "application/json" }),
   async (req, res) => {
     const sig = req.headers["stripe-signature"];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     let event;
+
     try {
+      // Construct the Stripe event from raw body
       event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
     } catch (err) {
-      console.error("Webhook signature verification failed:", err);
+      console.error("Webhook signature verification failed:", err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
+    // Handle checkout.session.completed event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const customer_id = session.customer;
 
       try {
-        await customersCollection.updateOne(
+        // Update MongoDB subscription status to true
+        const result = await customersCollection.updateOne(
           { customer_id },
           { $set: { subscription_status: true } }
         );
-        console.log(`Customer ${customer_id} subscribed`);
+
+        if (result.matchedCount === 0) {
+          console.warn(`Webhook: Customer not found in DB: ${customer_id}`);
+        } else {
+          console.log(
+            `Webhook: Customer ${customer_id} subscription marked active`
+          );
+        }
       } catch (err) {
-        console.error("Failed to update subscription status:", err);
+        console.error("Webhook: Failed to update subscription in DB:", err);
       }
     }
 
-    res.json({ received: true });
+    // Return a 200 response to acknowledge receipt
+    res.status(200).json({ received: true });
   }
 );
 
