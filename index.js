@@ -36,7 +36,19 @@ const app = express();
 // Security middleware
 app.use(
   helmet({
-    contentSecurityPolicy: false, // Disable for inline HTML pages
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://connect.facebook.net",
+        ],
+        imgSrc: ["'self'", "https://www.facebook.com", "data:"],
+        connectSrc: ["'self'", "https://www.facebook.com"],
+        frameSrc: ["'self'", "https://www.facebook.com"],
+      },
+    },
   })
 );
 
