@@ -1238,6 +1238,7 @@ app.get("/", (req, res) => {
     <div class="links">
       <a href="https://forms.gle/2ChNW343VCfkC9Ho7" target="_blank" rel="noopener noreferrer">Feedback</a>
       <a href="https://forms.gle/u6zVcJoor7i5Q1Gd9" target="_blank" rel="noopener noreferrer">Support</a>
+      <a href="https://billing.stripe.com/p/login/00w7sMf1R3kDb658GPf7i00" target="_blank" rel="noopener noreferrer">Manage Subscription</a>
       <a href="/privacy">Privacy Policy</a>
     </div>
   </div>
