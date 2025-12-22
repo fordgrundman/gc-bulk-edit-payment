@@ -65,7 +65,45 @@ const blogPosts = [
 <p>That’s really it.</p>
 `,
   },
-  // Add more blog posts here as objects
+  {
+    slug: "save-time-managing-google-calendar-events",
+    title: "Save Hours Every Month: Bulk Edit Your Google Calendar Events",
+    date: "2025-12-23",
+    description:
+      "Discover how Google Calendar Bulk Edit helps you select, move, and delete multiple events at once—no more repetitive clicking.",
+    content: `
+<h1>Save Hours Every Month: Bulk Edit Your Google Calendar Events</h1>
+<p>If you use Google Calendar to manage a busy schedule, you know how tedious it can be to update events one by one. Whether you’re rescheduling a week’s worth of meetings or clearing out old reminders, the process can eat up valuable time.</p>
+<p>That’s where Google Calendar Bulk Edit comes in. This Chrome extension lets you select multiple events at once using a selection box or keyboard shortcuts, and move or delete them together. No more clicking “Edit” and “Save” for every single event.</p>
+<p>With customizable shortcuts, you can quickly select, deselect, move, or delete events in bulk. And if you make a mistake, the undo feature lets you revert your last changes instantly. It’s a simple way to make Google Calendar work for you, not against you.</p>
+`,
+  },
+  {
+    slug: "organize-busy-calendar-faster-bulk-edit-tools",
+    title: "Organize Your Busy Calendar Faster with Bulk Edit Tools",
+    date: "2025-12-23",
+    description:
+      "Learn how to keep your Google Calendar organized using bulk selection, color highlights, and keyboard shortcuts.",
+    content: `
+<h1>Organize Your Busy Calendar Faster with Bulk Edit Tools</h1>
+<p>Staying organized is key to productivity, but a cluttered calendar can slow you down. Google Calendar Bulk Edit helps you keep things tidy by letting you select and manage multiple events at once.</p>
+<p>Use the selection box or keyboard shortcuts to highlight several events, then move or delete them in one go. You can even customize the highlight color for selected events, making it easy to spot what’s important.</p>
+<p>With shortcuts for every action—select, deselect, move, delete, undo, and color—you can keep your calendar organized without endless clicking. It’s perfect for anyone who juggles meetings, deadlines, or changing plans.</p>
+`,
+  },
+  {
+    slug: "recover-from-calendar-mistakes-bulk-edit-undo",
+    title: "Made a Mistake in Google Calendar? Here’s How to Fix It Instantly",
+    date: "2025-12-23",
+    description:
+      "See how the undo feature in Google Calendar Bulk Edit lets you recover from accidental changes in seconds.",
+    content: `
+<h1>Made a Mistake in Google Calendar? Here’s How to Fix It Instantly</h1>
+<p>We’ve all been there: you accidentally delete or move the wrong event in Google Calendar. With the standard interface, fixing mistakes can be a hassle.</p>
+<p>Google Calendar Bulk Edit makes recovery easy. Every time you make a bulk change, like moving or deleting multiple events, the extension keeps track of your actions. If you realize you made a mistake, just use the undo shortcut to instantly revert your last change.</p>
+<p>Combined with bulk selection and customizable shortcuts, this feature gives you confidence to manage your calendar quickly, knowing you can always undo if needed.</p>
+`,
+  },
 ];
 
 export default blogPosts;

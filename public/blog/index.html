@@ -32,8 +32,10 @@
         }
         list.innerHTML = posts.map(post => `
           <li>
-            <span class="post-date">${post.date}</span>
-            <a class="post-title" href="/blog/post.html?slug=${encodeURIComponent(post.slug)}">${post.title}</a>
+            <a class="post-title" href="/blog/post.html?slug=${encodeURIComponent(post.slug)}">
+              <span class="post-date">${post.date}</span>
+              ${post.title}
+            </a>
             <p class="post-desc">${post.description}</p>
           </li>
         `).join('');
