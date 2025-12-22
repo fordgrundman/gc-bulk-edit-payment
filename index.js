@@ -587,7 +587,6 @@ app.get("/payment-success", (req, res) => {
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Thank you for subscribing to GC Bulk Edit. Your subscription is now active.">
   
-  <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -607,7 +606,6 @@ app.get("/payment-success", (req, res) => {
   </script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=1181389844128113&ev=Subscribe&noscript=1"/></noscript>
-  <!-- End Meta Pixel Code -->
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -730,7 +728,6 @@ app.get("/payment-cancel", (req, res) => {
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Payment was canceled. You can still use your free actions with GC Bulk Edit.">
   
-  <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -745,7 +742,6 @@ app.get("/payment-cancel", (req, res) => {
   </script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=1181389844128113&ev=PageView&noscript=1"/></noscript>
-  <!-- End Meta Pixel Code -->
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -849,13 +845,10 @@ app.get("/privacy", (req, res) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/favicon.png">
   <title>Privacy Policy - GC Bulk Edit</title>
-  
-  <!-- SEO Meta Tags -->
   <meta name="description" content="Privacy Policy for GC Bulk Edit Chrome extension. Learn how we handle your data, Google Calendar access, and protect your privacy.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://gcbulkedit.dev/privacy">
   
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://gcbulkedit.dev/privacy">
   <meta property="og:title" content="Privacy Policy - GC Bulk Edit">
@@ -1142,22 +1135,17 @@ app.get("/", (req, res) => {
   <link rel="icon" type="image/png" href="/favicon.png">
   <title>GC Bulk Edit - Bulk Edit, Delete & Move Google Calendar Events</title>
   
-  <!-- SEO Meta Tags -->
   <meta name="description" content="Save hours managing your Google Calendar. Select multiple events at once, bulk delete, move events in batches, and customize keyboard shortcuts. Free Chrome extension with 50 free actions.">
-  <meta name="keywords" content="Google Calendar, bulk edit, bulk delete, calendar extension, Chrome extension, productivity, time management, calendar events, batch edit">
+  <meta name="keywords" content="google calendar, bulk edit google calendar, edit google calendar, mass edit google calendar, google calendar duplicates, bulk edit calendar, mass edit calendar, google calendar bulk, google calendar batch, google calendar multiple, google calendar mass, delete calendar duplicates, delete google calendar duplicates, fix google calendar, bulk delete, calendar extension, Chrome extension, productivity, time management, calendar events">
   <meta name="author" content="GC Bulk Edit">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://gcbulkedit.dev/">
-  
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://gcbulkedit.dev/">
   <meta property="og:title" content="GC Bulk Edit - Bulk Edit Google Calendar Events">
   <meta property="og:description" content="Save hours managing your Google Calendar. Select multiple events, bulk delete, and move events in batches. Free Chrome extension.">
   <meta property="og:image" content="https://gcbulkedit.dev/icon128.png">
   <meta property="og:site_name" content="GC Bulk Edit">
-  
-  <!-- Additional SEO -->
   <meta name="theme-color" content="#667eea">
   <meta name="application-name" content="GC Bulk Edit">
   
