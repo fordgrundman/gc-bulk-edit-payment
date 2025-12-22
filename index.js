@@ -1,3 +1,30 @@
+// --- Blog Post Validation & Helper Functions ---
+function validateBlogPost(post) {
+  if (!post) return false;
+  const { slug, title, date, description, content } = post;
+  return (
+    typeof slug === "string" &&
+    typeof title === "string" &&
+    typeof date === "string" &&
+    typeof description === "string" &&
+    typeof content === "string"
+  );
+}
+
+async function getAllBlogPosts() {
+  return await blogCollection.find({}, { projection: { _id: 0 } }).toArray();
+}
+
+async function getBlogPostBySlug(slug) {
+  return await blogCollection.findOne({ slug }, { projection: { _id: 0 } });
+}
+
+async function insertBlogPost(post) {
+  if (!validateBlogPost(post)) throw new Error("Invalid blog post format");
+  await blogCollection.insertOne(post);
+}
+
+// Add more helpers as needed (update, delete)
 import express from "express";
 import Stripe from "stripe";
 import dotenv from "dotenv";
@@ -23,6 +50,7 @@ await client.connect();
 
 const db = client.db("gc-bulk-edit-db");
 const customersCollection = db.collection("customers");
+const blogCollection = db.collection("blogPosts");
 
 const FREE_ACTIONS_LIMIT = 50;
 
@@ -1317,6 +1345,36 @@ app.get("/", (req, res) => {
 </html>
   `;
   res.send(html);
+});
+
+// ---------------- BLOG ENDPOINT ----------------
+
+// GET /blog - list all posts (titles, slugs, date, description)
+app.get("/blog", async (req, res) => {
+  try {
+    const posts = await getAllBlogPosts();
+    // Only return summary fields
+    const summaries = posts.map(({ slug, title, date, description }) => ({
+      slug,
+      title,
+      date,
+      description,
+    }));
+    res.json(summaries);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch blog posts" });
+  }
+});
+
+// GET /blog/:slug - get a single post by slug
+app.get("/blog/:slug", async (req, res) => {
+  try {
+    const post = await getBlogPostBySlug(req.params.slug);
+    if (!post) return res.status(404).json({ error: "Blog post not found" });
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch blog post" });
+  }
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));

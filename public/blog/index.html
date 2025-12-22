@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GC Bulk Edit Blog</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0; }
+    .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 32px; }
+    h1 { color: #4a4a8a; }
+    .post-list { list-style: none; padding: 0; }
+    .post-list li { margin-bottom: 28px; }
+    .post-title { font-size: 1.3em; color: #333; text-decoration: none; font-weight: bold; }
+    .post-title:hover { color: #667eea; }
+    .post-date { color: #888; font-size: 0.95em; margin-bottom: 4px; display: block; }
+    .post-desc { color: #444; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GC Bulk Edit Blog</h1>
+    <ul class="post-list" id="blog-list"></ul>
+  </div>
+  <script>
+    fetch('/blog')
+      .then(res => res.json())
+      .then(posts => {
+        const list = document.getElementById('blog-list');
+        if (!posts.length) {
+          list.innerHTML = '<li>No blog posts found.</li>';
+          return;
+        }
+        list.innerHTML = posts.map(post => `
+          <li>
+            <span class="post-date">${post.date}</span>
+            <a class="post-title" href="/blog/post.html?slug=${encodeURIComponent(post.slug)}">${post.title}</a>
+            <p class="post-desc">${post.description}</p>
+          </li>
+        `).join('');
+      });
+  </script>
+</body>
+</html>

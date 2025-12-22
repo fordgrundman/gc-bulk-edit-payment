@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Post - GC Bulk Edit</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0; }
+    .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 32px; }
+    h1 { color: #4a4a8a; }
+    .post-date { color: #888; font-size: 0.95em; margin-bottom: 12px; display: block; }
+    .back-link { display: inline-block; margin-bottom: 24px; color: #667eea; text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
+    .post-content { color: #222; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back-link" href="/blog/index.html">&larr; Back to Blog</a>
+    <div id="post"></div>
+  </div>
+  <script>
+    function getSlug() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('slug');
+    }
+    const slug = getSlug();
+    if (!slug) {
+      document.getElementById('post').innerHTML = '<p>Blog post not found.</p>';
+    } else {
+      fetch(`/blog/${encodeURIComponent(slug)}`)
+        .then(res => res.json())
+        .then(post => {
+          if (post.error) {
+            document.getElementById('post').innerHTML = '<p>Blog post not found.</p>';
+            return;
+          }
+          document.title = post.title + ' - GC Bulk Edit';
+          document.getElementById('post').innerHTML = `
+            <h1>${post.title}</h1>
+            <span class="post-date">${post.date}</span>
+            <div class="post-content">${post.content}</div>
+          `;
+        });
+    }
+  </script>
+</body>
+</html>
