@@ -5,37 +5,185 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GC Bulk Edit</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0; }
-    .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 32px; }
-    h1 { color: #4a4a8a; }
-    .logo { text-align: center; margin-bottom: 24px; }
-    .logo img { width: 80px; height: 80px; }
-    .tagline { color: #555; font-size: 1.1em; margin-bottom: 32px; text-align: center; }
-    .features { background: #f0f4ff; border-radius: 12px; padding: 24px; margin-bottom: 32px; }
-    .features h3 { color: #333; margin-bottom: 16px; font-size: 18px; }
-    .features ul { list-style: none; }
-    .features li { color: #555; padding: 8px 0; padding-left: 28px; position: relative; }
-    .features li::before { content: "✓"; position: absolute; left: 0; color: #4CAF50; font-weight: bold; }
-    .cta-button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-size: 18px; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 24px; }
-    .cta-button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4); }
-    .links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
-    .links a { color: #667eea; text-decoration: none; font-size: 14px; transition: color 0.2s; }
-    .links a:hover { color: #764ba2; text-decoration: underline; }
-    .footer { margin-top: 40px; color: rgba(255, 255, 255, 0.8); font-size: 14px; }
-    .footer a { color: white; text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
-    .social-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; }
-    .social-links a { color: rgba(255, 255, 255, 0.8); transition: color 0.2s, transform 0.2s; }
-    .social-links a:hover { color: white; transform: scale(1.1); text-decoration: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      margin: 0 auto 20px;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    h1 {
+      color: #1a1a1a;
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .subtitle, .tagline {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+    .features {
+      text-align: left;
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .features h3 {
+      color: #333;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    .features ul {
+      list-style: none;
+    }
+    .features li {
+      color: #555;
+      padding: 8px 0 8px 28px;
+      position: relative;
+    }
+    .features li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 24px;
+      margin-top: 8px;
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+    .links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .links a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .links a svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+    .footer {
+      margin-top: 40px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      text-align: center;
+    }
+    .footer a {
+      color: white;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+    .social-links a {
+      color: rgba(255, 255, 255, 0.8);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .social-links a:hover {
+      color: white;
+      transform: scale(1.1);
+      text-decoration: none;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 24px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .links {
+        flex-direction: column;
+      }
+      .links a {
+        justify-content: center;
+      }
+      .features {
+        padding: 16px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
+   
     <div class="logo">
       <img src="/icon128.png" alt="GC Bulk Edit Logo">
     </div>
     <h1>GC Bulk Edit</h1>
-    <p class="tagline">Bulk edit, delete, and manage your Google Calendar events with ease</p>
+    <p class="subtitle">Bulk edit, delete, and manage your Google Calendar events with ease</p>
+    <div class="links" style="margin-bottom:32px;">
+      <a href="/index.html">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Home
+      </a>
+      <a href="/blog/index.html">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
+        Blog
+      </a>
+    </div>
     <div class="features">
       <h3>Features</h3>
       <ul>
@@ -50,10 +198,22 @@
       Get the Extension
     </a>
     <div class="links">
-      <a href="https://forms.gle/2ChNW343VCfkC9Ho7" target="_blank" rel="noopener noreferrer">Feedback</a>
-      <a href="https://forms.gle/u6zVcJoor7i5Q1Gd9" target="_blank" rel="noopener noreferrer">Support</a>
-      <a href="https://billing.stripe.com/p/login/00w7sMf1R3kDb658GPf7i00" target="_blank" rel="noopener noreferrer">Manage Subscription</a>
-      <a href="/privacy">Privacy Policy</a>
+      <a href="https://forms.gle/2ChNW343VCfkC9Ho7" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
+        Feedback
+      </a>
+      <a href="https://forms.gle/u6zVcJoor7i5Q1Gd9" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+        Support
+      </a>
+      <a href="https://billing.stripe.com/p/login/00w7sMf1R3kDb658GPf7i00" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        Manage Subscription
+      </a>
+      <a href="/privacy">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+        Privacy Policy
+      </a>
     </div>
   </div>
   <div class="footer">

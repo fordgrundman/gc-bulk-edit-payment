@@ -3,21 +3,179 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/favicon.png">
   <title>Blog Post - GC Bulk Edit</title>
+  <meta name="description" content="Read the latest tips and guides for Google Calendar bulk editing.">
   <style>
-    body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0; }
-    .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 32px; }
-    h1 { color: #4a4a8a; }
-    .post-date { color: #888; font-size: 0.95em; margin-bottom: 12px; display: block; }
-    .back-link { display: inline-block; margin-bottom: 24px; color: #667eea; text-decoration: none; }
-    .back-link:hover { text-decoration: underline; }
-    .post-content { color: #222; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .links a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .links a svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+    h1 {
+      color: #1a1a1a;
+      font-size: 32px;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .post-date {
+      color: #667eea;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      display: block;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .post-content {
+      color: #333;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+    .post-content h2 {
+      color: #1a1a1a;
+      font-size: 24px;
+      margin: 32px 0 16px;
+      padding-top: 24px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .post-content h3 {
+      color: #333;
+      font-size: 20px;
+      margin: 24px 0 12px;
+    }
+    .post-content p {
+      margin-bottom: 16px;
+    }
+    .post-content ul, .post-content ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+    .post-content li {
+      margin-bottom: 8px;
+    }
+    .post-content a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    .post-content a:hover {
+      text-decoration: underline;
+    }
+    .post-content code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .post-content pre {
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    .post-content pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+    .post-content blockquote {
+      border-left: 4px solid #667eea;
+      padding: 16px 20px;
+      margin: 20px 0;
+      background: #f8f9fa;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: #555;
+    }
+    .post-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    .error {
+      text-align: center;
+      padding: 40px;
+      color: #e74c3c;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 24px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .links {
+        flex-direction: column;
+      }
+      .links a {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <a class="back-link" href="/blog/index.html">&larr; Back to Blog</a>
-    <div id="post"></div>
+    <div class="links">
+      <a href="/index.html">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Home
+      </a>
+      <a href="/blog/index.html">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
+        Blog
+      </a>
+    </div>
+    <div id="post">
+      <div class="loading">Loading post...</div>
+    </div>
   </div>
   <script>
     function getSlug() {
@@ -26,21 +184,28 @@
     }
     const slug = getSlug();
     if (!slug) {
-      document.getElementById('post').innerHTML = '<p>Blog post not found.</p>';
+      document.getElementById('post').innerHTML = '<div class="error">Blog post not found.</div>';
     } else {
-      fetch(`/blog/${encodeURIComponent(slug)}`)
+      fetch(`/api/blog/${encodeURIComponent(slug)}`)
         .then(res => res.json())
         .then(post => {
           if (post.error) {
-            document.getElementById('post').innerHTML = '<p>Blog post not found.</p>';
+            document.getElementById('post').innerHTML = '<div class="error">Blog post not found.</div>';
             return;
           }
-          document.title = post.title + ' - GC Bulk Edit';
+          document.title = post.title + ' - GC Bulk Edit Blog';
+          // Update meta description
+          let metaDesc = document.querySelector('meta[name="description"]');
+          if (metaDesc) metaDesc.content = post.description;
+          
           document.getElementById('post').innerHTML = `
             <h1>${post.title}</h1>
-            <span class="post-date">${post.date}</span>
+            <span class="post-date">📅 ${post.date}</span>
             <div class="post-content">${post.content}</div>
           `;
+        })
+        .catch(err => {
+          document.getElementById('post').innerHTML = '<div class="error">Failed to load blog post.</div>';
         });
     }
   </script>
