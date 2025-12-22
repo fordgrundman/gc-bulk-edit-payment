@@ -12,9 +12,6 @@ async function main() {
   const db = client.db("gc-bulk-edit-db");
   const blogCollection = db.collection("blogPosts");
 
-  // Remove all existing posts (optional, for clean migration)
-  // await blogCollection.deleteMany({});
-
   // Insert posts if they don't already exist (by slug)
   for (const post of blogPosts) {
     const exists = await blogCollection.findOne({ slug: post.slug });
