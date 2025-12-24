@@ -6,6 +6,7 @@
   <title>GC Bulk Edit</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/icon128.png" />
+  <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/adff6128c991183554583f082/1f751e8e280766dd797a918e8.js");</script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -149,6 +150,64 @@
       transform: scale(1.1);
       text-decoration: none;
     }
+    .newsletter {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .newsletter h3 {
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .newsletter p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .newsletter form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .newsletter input[type="email"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter input[type="email"]:focus {
+      border-color: #667eea;
+    }
+    .newsletter button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .newsletter button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .newsletter .success-message {
+      color: #4CAF50;
+      font-weight: 500;
+      display: none;
+    }
     @media (max-width: 600px) {
       .container {
         padding: 24px;
@@ -218,6 +277,20 @@
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
         Privacy Policy
       </a>
+    </div>
+    
+    <!-- Email Newsletter Signup -->
+    <div class="newsletter">
+      <h3>📬 Stay Updated</h3>
+      <p>Get tips, updates, and new feature announcements. No spam, unsubscribe anytime.</p>
+      <form action="https://dev.us16.list-manage.com/subscribe/post" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
+        <input type="email" name="EMAIL" placeholder="Enter your email" required>
+        <!-- Honeypot field for spam protection - do not fill this in -->
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="text" name="b_name" tabindex="-1" value="">
+        </div>
+        <button type="submit">Subscribe</button>
+      </form>
     </div>
   </div>
   <div class="footer">

@@ -6,6 +6,7 @@
   <link rel="icon" type="image/png" href="/favicon.png">
   <title>GC Bulk Edit Blog - Tips & Guides for Google Calendar</title>
   <meta name="description" content="Learn tips, tricks, and best practices for managing your Google Calendar more efficiently with bulk editing.">
+  <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/adff6128c991183554583f082/1f751e8e280766dd797a918e8.js");</script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -76,6 +77,57 @@
     .subtitle {
       color: #666;
       font-size: 16px;
+    }
+    .newsletter {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 32px;
+      text-align: center;
+    }
+    .newsletter h3 {
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .newsletter p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .newsletter form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .newsletter input[type="email"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter input[type="email"]:focus {
+      border-color: #667eea;
+    }
+    .newsletter button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .newsletter button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
     }
     .post-list {
       list-style: none;
@@ -191,6 +243,19 @@
     <ul class="post-list" id="blog-list">
       <li class="loading">Loading posts...</li>
     </ul>
+    
+    <!-- Email Newsletter Signup -->
+    <div class="newsletter">
+      <h3>📬 Stay Updated</h3>
+      <p>Get tips, updates, and new feature announcements. No spam, unsubscribe anytime.</p>
+      <form action="https://dev.us16.list-manage.com/subscribe/post" method="post" name="mc-embedded-subscribe-form" target="_blank">
+        <input type="email" name="EMAIL" placeholder="Enter your email" required>
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="text" name="b_name" tabindex="-1" value="">
+        </div>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
   </div>
   <script>
     fetch('/api/blog')
