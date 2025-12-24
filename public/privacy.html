@@ -165,7 +165,7 @@
         <img src="/icon128.png" alt="GC Bulk Edit Logo">
       </div>
       <h1>GC Bulk Edit</h1>
-      <p class="subtitle">Privacy Policy - Last Updated: 12/9/2025</p>
+      <p class="subtitle">Privacy Policy - Last Updated: December 24, 2025</p>
       <div class="links">
         <a href="/">
           <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -179,97 +179,128 @@
     </div>
 
     <h2>1. Introduction</h2>
-    <p>The Google Calendar Bulk Edit Extension is a browser extension designed to enhance your experience in Google Calendar. Your privacy is important to us. This Privacy Policy explains what data we collect, how we use it, and how it is protected.</p>
+    <p>Google Calendar Bulk Edit ("the Extension") is a Chrome browser extension that allows you to select and perform bulk operations on multiple Google Calendar events at once. This Privacy Policy explains what data we access, how we use it, and how we protect your privacy.</p>
     <p>By using the Extension, you agree to the practices described in this policy.</p>
 
     <h2>2. Information We Collect</h2>
     
-    <h3>2.1 Chrome Extension Data</h3>
-    <p>The Extension may store locally on your device:</p>
+    <h3>2.1 Data Stored Locally on Your Device</h3>
+    <p>The Extension stores the following information locally in your browser using Chrome's storage API:</p>
     <ul>
-      <li>User preferences or settings (e.g., highlight colors, UI state, toggle options)</li>
-      <li>Temporary selection or UI-related state for the purpose of the extension's functionality</li>
+      <li>User preferences (highlight color, keyboard shortcuts, UI settings)</li>
+      <li>Authentication state (whether you are signed in)</li>
+      <li>Cached subscription status</li>
+      <li>Undo history for recent bulk operations</li>
     </ul>
     <div class="highlight">
-      <p>This information is stored only on your device and is never transmitted to our servers.</p>
+      <p>This information is stored only on your device and is not transmitted to our servers, except as described below.</p>
     </div>
 
-    <h3>2.2 Google Calendar API Data (If Applicable)</h3>
-    <p>If the Extension interacts with your Google Calendar (e.g., reading events, modifying events), it may access:</p>
+    <h3>2.2 Data Sent to Our Server</h3>
+    <p>When you sign in to the Extension, we collect:</p>
     <ul>
-      <li>Event metadata (event ID, title, description, start/end times)</li>
-      <li>Calendar metadata (calendar IDs, access level)</li>
-      <li>Your Google Account email address (only to identify the currently active Google Calendar)</li>
+      <li><strong>Your Google Account email address</strong> - Used solely to identify your account for subscription management</li>
+    </ul>
+    <p>This email is sent to our server (gcbulkedit.dev) to:</p>
+    <ul>
+      <li>Check your subscription status (free tier vs. paid subscriber)</li>
+      <li>Track how many free bulk operations you have remaining (50 free actions)</li>
+      <li>Process subscription purchases and cancellations</li>
+    </ul>
+    <div class="highlight">
+      <p>We do not store, transmit, or have access to any of your calendar event data. All calendar operations happen entirely within your browser.</p>
+    </div>
+
+    <h3>2.3 Google Calendar Data</h3>
+    <p>The Extension accesses your Google Calendar data to perform bulk operations. This includes:</p>
+    <ul>
+      <li>Event metadata (titles, times, colors, descriptions)</li>
+      <li>Calendar IDs to identify which calendar events belong to</li>
     </ul>
     <p>This data:</p>
     <ul>
-      <li>Is only used to perform actions you request inside Google Calendar</li>
-      <li>Is not stored on external servers</li>
-      <li>Is not shared with any third parties</li>
-      <li>Is never used for advertising or profiling</li>
+      <li>Is processed entirely within your browser</li>
+      <li>Is never sent to our servers</li>
+      <li>Is never stored, logged, or analyzed by us</li>
+      <li>Is only used to perform actions you explicitly request</li>
     </ul>
     <div class="highlight">
-      <p>The Extension complies fully with the Google API Services User Data Policy, including the Limited Use requirements.</p>
+      <p>The Extension's use of Google Calendar data complies with the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
     </div>
 
     <h2>3. How We Use Your Information</h2>
-    <p>We use the information accessed by the Extension solely to:</p>
+    <p>We use your information for the following purposes only:</p>
     <ul>
-      <li>Provide functionality such as highlighting, selecting, or modifying events</li>
-      <li>Display UI-enhancing features inside Google Calendar</li>
-      <li>Ensure actions are performed under the correct Google account</li>
-      <li>Provide a smooth and consistent user experience</li>
+      <li><strong>Email address:</strong> To manage your subscription and track free action usage</li>
+      <li><strong>Local preferences:</strong> To remember your settings between sessions</li>
+      <li><strong>Calendar data:</strong> To perform bulk move, delete, rename, copy, paste, and color operations that you request</li>
     </ul>
     <div class="highlight">
-      <p>We do not use your data for analytics, tracking, advertising, or selling to third parties.</p>
+      <p>We do not use your data for analytics, tracking, advertising, profiling, or any purpose other than providing the Extension's core functionality.</p>
     </div>
 
     <h2>4. Data Sharing and Disclosure</h2>
-    <p>We do not:</p>
+    <p>We do not sell, rent, or share your personal information with third parties, except:</p>
     <ul>
-      <li>Sell data</li>
-      <li>Share data with advertising providers</li>
-      <li>Transfer data to third parties</li>
-      <li>Store any personally identifiable information on servers</li>
+      <li><strong>Stripe:</strong> If you subscribe, your email is shared with Stripe to process payments. Stripe's privacy policy applies to payment processing.</li>
+      <li><strong>Google:</strong> The Extension uses Google OAuth for authentication and Google Calendar API for event operations. Google's privacy policy applies to these services.</li>
     </ul>
-    <p>Your data stays 100% on your local device unless Google transmits it through its own API as part of actions you initiate (e.g., updating an event).</p>
+    <p>We do not share your data with advertisers, data brokers, or any other third parties.</p>
 
-    <h2>5. Data Security</h2>
-    <p>Although the Extension does not transmit your data to external servers, we still take security seriously. All data accessed through the Extension uses:</p>
+    <h2>5. Data Retention</h2>
+    <ul>
+      <li><strong>Email and subscription data:</strong> Retained on our server as long as you have an account. You can request deletion by contacting us.</li>
+      <li><strong>Local preferences:</strong> Stored until you uninstall the Extension or clear browser data.</li>
+      <li><strong>Calendar data:</strong> Never stored - processed in real-time and immediately discarded.</li>
+    </ul>
+
+    <h2>6. Data Security</h2>
+    <p>We implement appropriate security measures to protect your information:</p>
     <ul>
       <li>OAuth 2.0 secure authentication via Google</li>
-      <li>Industry-standard security handled by the Chrome Extensions platform</li>
+      <li>HTTPS encryption for all server communications</li>
+      <li>Secure payment processing through Stripe</li>
+      <li>No storage of sensitive calendar data</li>
     </ul>
-    <p>No external databases or servers are used.</p>
 
-    <h2>6. Permissions</h2>
-    <p>The Extension may request the following permissions:</p>
+    <h2>7. Permissions Explained</h2>
+    <p>The Extension requests the following permissions:</p>
     <ul>
-      <li><strong>identity</strong> - For authenticating with your Google account</li>
-      <li><strong>activeTab or scripting</strong> - To interact with Google Calendar pages</li>
-      <li><strong>storage</strong> - To save extension preferences locally</li>
-      <li><strong>Google Calendar API scopes</strong> (if applicable) only as required for the Extension's features</li>
+      <li><strong>identity:</strong> To sign you in with your Google account via OAuth</li>
+      <li><strong>storage:</strong> To save your preferences locally in your browser</li>
+      <li><strong>scripting:</strong> To inject the Extension into Google Calendar tabs when installed</li>
+      <li><strong>Host permissions (calendar.google.com):</strong> To add bulk editing functionality to Google Calendar pages</li>
+      <li><strong>Google Calendar API scope:</strong> To read and modify calendar events when you perform bulk operations</li>
     </ul>
-    <p>We request only the minimal permissions needed for functionality.</p>
+    <p>We request only the minimum permissions required for the Extension to function.</p>
 
-    <h2>7. Third-Party Services</h2>
-    <p>The Extension uses Google APIs. Your use of Google services is subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>.</p>
+    <h2>8. Third-Party Services</h2>
+    <p>The Extension integrates with the following third-party services:</p>
+    <ul>
+      <li><strong>Google APIs:</strong> For authentication and calendar access. Subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>.</li>
+      <li><strong>Stripe:</strong> For payment processing. Subject to <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer">Stripe's Privacy Policy</a>.</li>
+    </ul>
 
-    <h2>8. Microtransactions (Future Features)</h2>
-    <p>In the future, the Extension may offer optional microtransactions to unlock premium features or additional functionality.</p>
-    <p>If such features are added, they will only use data necessary to process the transaction, such as payment information handled through trusted third-party payment processors.</p>
-    <p>Any personal or calendar data will not be used for payment processing.</p>
+    <h2>9. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li><strong>Access:</strong> Request a copy of the personal data we hold about you</li>
+      <li><strong>Deletion:</strong> Request deletion of your account and associated data</li>
+      <li><strong>Revoke access:</strong> Remove the Extension's access to your Google account at any time via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Account Settings</a></li>
+      <li><strong>Unsubscribe:</strong> Cancel your subscription at any time through the Extension</li>
+    </ul>
+    <p>To exercise these rights, contact us at the email below.</p>
 
-    <h2>9. Children's Privacy</h2>
-    <p>The Extension is not intended for children under 13 and does not knowingly collect data from children.</p>
+    <h2>10. Children's Privacy</h2>
+    <p>The Extension is not intended for use by children under 13 years of age. We do not knowingly collect personal information from children under 13.</p>
 
-    <h2>10. Changes to This Privacy Policy</h2>
-    <p>We may update this Privacy Policy from time to time. Updates will be posted on this page with a revised "Last Updated" date.</p>
+    <h2>11. Changes to This Privacy Policy</h2>
+    <p>We may update this Privacy Policy from time to time. If we make material changes, we will update the "Last Updated" date at the top of this page. Continued use of the Extension after changes constitutes acceptance of the updated policy.</p>
 
     <div class="contact">
-      <h3>11. Contact Us</h3>
-      <p>If you have questions about this Privacy Policy or the Extension, you can contact us at:</p>
-      <p><strong>Email:</strong> <a href="mailto:codingasford@gmail.com">codingasford@gmail.com</a></p>
+      <h3>12. Contact Us</h3>
+      <p>If you have questions about this Privacy Policy or wish to exercise your data rights, contact us at:</p>
+      <p><strong>Email:</strong> <a href="mailto:gcbulkedit@gmail.com">gcbulkedit@gmail.com</a></p>
     </div>
   </div>
 </body>
