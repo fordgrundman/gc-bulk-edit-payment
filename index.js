@@ -110,6 +110,11 @@ app.get("/privacy", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "privacy.html"));
 });
 
+// Serve terms page at /terms
+app.get("/terms", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "terms.html"));
+});
+
 // Serve payment pages without .html extension
 app.get("/payment-success", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "payment-success.html"));
