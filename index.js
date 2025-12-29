@@ -642,4 +642,76 @@ app.get("/api/blog/:slug", async (req, res) => {
   }
 });
 
+// ---------------- USER PREFERENCES API ----------------
+
+// GET /preferences - Get user preferences by email
+app.get("/preferences", async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
+
+    const normalizedEmail = email.toLowerCase();
+    const customer = await customersCollection.findOne({
+      emails: { $in: [normalizedEmail] },
+    });
+
+    if (!customer) {
+      // User doesn't exist yet - return empty preferences
+      return res.json({ preferences: null });
+    }
+
+    // Return preferences (may be undefined if never set)
+    res.json({
+      preferences: customer.preferences || null,
+    });
+  } catch (err) {
+    console.error("Get preferences failed:", err);
+    res.status(500).json({ error: "Failed to fetch preferences" });
+  }
+});
+
+// POST /preferences - Save user preferences by email
+app.post("/preferences", async (req, res) => {
+  try {
+    const { email, preferences } = req.body;
+    if (!email) return res.status(400).json({ error: "Email required" });
+    if (!isValidEmail(email))
+      return res.status(400).json({ error: "Invalid email format" });
+    if (!preferences || typeof preferences !== "object")
+      return res.status(400).json({ error: "Preferences object required" });
+
+    const normalizedEmail = email.toLowerCase();
+
+    // Validate preferences structure (only allow specific fields)
+    const allowedFields = ["keybinds", "highlightColor", "hideAllDayTasks"];
+    const sanitizedPrefs = {};
+    for (const key of allowedFields) {
+      if (preferences[key] !== undefined) {
+        sanitizedPrefs[key] = preferences[key];
+      }
+    }
+
+    // Upsert: update if exists, create minimal record if not
+    const result = await customersCollection.updateOne(
+      { emails: { $in: [normalizedEmail] } },
+      {
+        $set: { preferences: sanitizedPrefs },
+        $setOnInsert: {
+          emails: [normalizedEmail],
+          subscription_status: false,
+          free_actions_remaining: FREE_ACTIONS_LIMIT,
+        },
+      },
+      { upsert: true }
+    );
+
+    res.json({ success: true, updated: result.modifiedCount > 0 });
+  } catch (err) {
+    console.error("Save preferences failed:", err);
+    res.status(500).json({ error: "Failed to save preferences" });
+  }
+});
+
 app.listen(3000, () => console.log("Server running on port 3000"));
