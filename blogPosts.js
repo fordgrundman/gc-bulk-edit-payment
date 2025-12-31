@@ -71,7 +71,7 @@ const blogPosts = [
 
 <p>If you're tired of the slow, manual process of editing Google Calendar events one at a time, give GC Bulk Edit a try. It's free to start, with 50 free actions so you can see how it fits into your workflow.</p>
 
-<p><a href="https://chromewebstore.google.com/detail/google-calendar-bulk-edit/kadhgpkebheolkdnilclcfhpnbgfmpoo" target="_blank" rel="noopener noreferrer"><strong>Download the extension from the Chrome Web Store</strong></a> and start moving multiple events like a pro. Your future self, the one with a perfectly organized calendar, will thank you.</p>
+<p><a href="https://chromewebstore.google.com/detail/kklojeonebikceffbffplnkajeckobbk" target="_blank" rel="noopener noreferrer"><strong>Download the extension from the Chrome Web Store</strong></a> and start moving multiple events like a pro. Your future self, the one with a perfectly organized calendar, will thank you.</p>
 `,
   },
 ];
