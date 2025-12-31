@@ -685,7 +685,14 @@ app.post("/preferences", async (req, res) => {
     const normalizedEmail = email.toLowerCase();
 
     // Validate preferences structure (only allow specific fields)
-    const allowedFields = ["keybinds", "highlightColor", "hideAllDayTasks"];
+    const allowedFields = [
+      "keybinds",
+      "highlightColor",
+      "hideAllDayTasks",
+      "hideLeftSidebar",
+      "hideRightSidebar",
+      "hourRange",
+    ];
     const sanitizedPrefs = {};
     for (const key of allowedFields) {
       if (preferences[key] !== undefined) {
