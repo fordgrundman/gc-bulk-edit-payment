@@ -248,6 +248,7 @@ app.post("/create-checkout", async (req, res) => {
           subscription_status: false,
           plan: process.env.STRIPE_PRICE_ID_PROD,
           emails: [normalizedEmail],
+          created_at: new Date(),
         });
         console.log("Inserted new customer:", stripeCustomerId);
       } catch (err) {
@@ -364,6 +365,7 @@ app.post("/check-action", async (req, res) => {
         plan: process.env.STRIPE_PRICE_ID_PROD,
         emails: [normalizedEmail],
         free_actions_remaining: FREE_ACTIONS_LIMIT,
+        created_at: new Date(),
       });
 
       customer = await customersCollection.findOne({
@@ -428,8 +430,12 @@ app.post("/consume-actions", async (req, res) => {
       return res.status(404).json({ error: "Customer not found" });
     }
 
-    // If subscribed, don't consume free actions
+    // If subscribed, don't consume free actions but track last action
     if (customer.subscription_status) {
+      await customersCollection.updateOne(
+        { customer_id: customer.customer_id },
+        { $set: { last_action_at: new Date() } }
+      );
       return res.json({
         success: true,
         subscribed: true,
@@ -445,7 +451,12 @@ app.post("/consume-actions", async (req, res) => {
 
     await customersCollection.updateOne(
       { customer_id: customer.customer_id },
-      { $set: { free_actions_remaining: newActionsRemaining } }
+      {
+        $set: {
+          free_actions_remaining: newActionsRemaining,
+          last_action_at: new Date(),
+        },
+      }
     );
 
     return res.json({
@@ -722,6 +733,7 @@ app.post("/preferences", async (req, res) => {
           emails: [normalizedEmail],
           subscription_status: false,
           free_actions_remaining: FREE_ACTIONS_LIMIT,
+          created_at: new Date(),
         },
       },
       { upsert: true }
