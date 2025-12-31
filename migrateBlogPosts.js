@@ -12,14 +12,26 @@ async function main() {
   const db = client.db("gc-bulk-edit-db");
   const blogCollection = db.collection("blogPosts");
 
-  // Insert posts if they don't already exist (by slug)
+  // Insert or update posts (by slug)
   for (const post of blogPosts) {
     const exists = await blogCollection.findOne({ slug: post.slug });
     if (!exists) {
       await blogCollection.insertOne(post);
       console.log(`Inserted: ${post.title}`);
     } else {
-      console.log(`Skipped (already exists): ${post.title}`);
+      // Update existing post
+      await blogCollection.updateOne(
+        { slug: post.slug },
+        {
+          $set: {
+            title: post.title,
+            date: post.date,
+            description: post.description,
+            content: post.content,
+          },
+        }
+      );
+      console.log(`Updated: ${post.title}`);
     }
   }
 
