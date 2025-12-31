@@ -16,6 +16,8 @@ async function getAllBlogPosts() {
 }
 
 async function getBlogPostBySlug(slug) {
+  // Sanitize slug to prevent NoSQL injection
+  if (typeof slug !== "string" || slug.length > 200) return null;
   return await blogCollection.findOne({ slug }, { projection: { _id: 0 } });
 }
 
@@ -311,6 +313,13 @@ app.get("/check-subscription", async (req, res) => {
     const { customer_id } = req.query;
     if (!customer_id)
       return res.status(400).json({ error: "Customer ID required" });
+    // Validate customer_id format (Stripe customer IDs start with "cus_")
+    if (
+      typeof customer_id !== "string" ||
+      customer_id.length > 100 ||
+      !customer_id.startsWith("cus_")
+    )
+      return res.status(400).json({ error: "Invalid customer ID format" });
 
     const customer = await customersCollection.findOne({ customer_id });
     if (!customer)
@@ -586,6 +595,10 @@ app.post("/link-email", async (req, res) => {
     const { customer_id, new_email } = req.body;
     if (!customer_id || !new_email)
       return res.status(400).json({ error: "Missing data" });
+    if (typeof customer_id !== "string" || customer_id.length > 100)
+      return res.status(400).json({ error: "Invalid customer_id" });
+    if (!isValidEmail(new_email))
+      return res.status(400).json({ error: "Invalid email format" });
 
     const normalizedEmail = new_email.toLowerCase();
     const result = await customersCollection.updateOne(
