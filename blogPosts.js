@@ -34,7 +34,7 @@ const blogPosts = [
 
 <h3>Step 1: Install the Extension</h3>
 
-<p>Head over to the <a href="https://chromewebstore.google.com/detail/google-calendar-bulk-edit/kadhgpkebheolkdnilclcfhpnbgfmpoo" target="_blank" rel="noopener noreferrer">Chrome Web Store</a> and install the Google Calendar Bulk Edit extension. It takes about 10 seconds. Once it's installed, you'll see a new icon in your browser toolbar.</p>
+<p>Head over to the <a href="https://chromewebstore.google.com/detail/kklojeonebikceffbffplnkajeckobbk" target="_blank" rel="noopener noreferrer">Chrome Web Store</a> and install the Google Calendar Bulk Edit extension. It takes about 10 seconds. Once it's installed, you'll see a new icon in your browser toolbar.</p>
 
 <h3>Step 2: Open Google Calendar and Select Your Events</h3>
 
